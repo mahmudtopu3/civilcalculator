@@ -24,7 +24,7 @@
      <div class="form-group">
         <label for="tileUnit">Size of AAC Block</label>
         <select class="form-control" v-model="aac" >
-            <option selected="selected">Select One</option>
+            <option >Select One</option>
          
           <option 
               v-for = "accblock in aacBlocks" 
@@ -40,14 +40,19 @@
 <div class="col-md-3">
       <br> <br>
       <div class="form-group">
-      <label >Wall Thickness</label>
-      <input type="number" class="form-control" :value="aac.b" disabled>
-      </div>
-
-     <h3>Results: </h3> 
-     <h4>Formula needed</h4>
+        <label for="thickness">Select Wall Thickness</label>
+        <select class="form-control" v-model="thickness">
+          <option >Select One</option>
+          <option value="5">5 inch</option>
+          <option value="10">10 inch</option>
+          <option value="20">20 inch</option>
      
-      
+         
+        </select>
+      </div>
+    
+
+
 
       
 
@@ -66,10 +71,10 @@
    <div class="row">
      <div class="col-md-3"></div>
    <div class="col-md-6" v-if="showResult">
-     <h3> Total Area of the floor: {{ `${sqft} sqft `}}</h3>
+     <h3> Total volume: {{ `${total} cubic meter `}}</h3>
 
     
-       <h3> Total Number of tiles: {{ `${result}  `}}</h3>
+       <h3> Total Number of blocks required: {{ `${result}  `}}</h3>
    </div>
    </div>
    
@@ -95,6 +100,7 @@ export default {
       area: '',
       volume: '',
       aac: 'Select One',
+      thickness: 'Select One',
       aacBlocks: [
           { id:1, h:600, w: 250, b:100 },
           { id:2, h:600, w: 250, b:125 },
@@ -115,45 +121,42 @@ export default {
       ],
      
       result: '',
-      sqft: '',
+      total: '',
       lengthUnit: 'mm'
 
     }
   },
   methods: {
     reset () {
-      this.floorLength = ''
-      this.floorWidth = ''
-      this.tileLength = ''
-      this.tileWidth = ''
+      this.thickness = ''
+      this.aac = ''
+      this.area = ''
       this.result = ''
-      this.sqft = ''
+      this.total = ''
       this.showResult = false
     },
     calculate (){
 
-    //   if(!this.floorLength || !this.floorWidth || !this.tileLength || !this.tileWidth ){
+      if(!this.area || !this.aac || !this.thickness  ){
 
-    //    alert('Enter All Values')
-    //    return 
-    //   }
+       alert('Enter All Values')
+       return 
+      }
 
       let h = this.baseConvert(this.aac.h,this.lengthUnit)
       let w = this.baseConvert(this.aac.w,this.lengthUnit)
       let b = this.baseConvert(this.aac.b,this.lengthUnit)
 
-      this.volume = (h*w*b)
+      let thinkness = this.baseConvert(this.thickness,'in')
+      
+      let wallVolumeIncubeM = (thinkness * this.area) * 0.028316846592
+      let blockVolumeIncubeM = ((h*w*b)) * 0.028316846592
+      
+      
+      this.result = Math.ceil((1/blockVolumeIncubeM)*wallVolumeIncubeM)
+      this.total = wallVolumeIncubeM
+      this.showResult = true;
 
-      let x = ((this.area)/ this.volume)
-
-      alert(x)
-    //   let floorWidth = this.baseConvert(bhis.floorWidth,this.lengthUnit)
-    //   this.sqft = (floorLength*floorWidth)
-    //   let tileLength = this.baseConvert(this.tileLength,this.tileUnit)
-    //   let tileWidth = this.baseConvert(this.tileWidth,this.tileUnit)
-
-    //   this.result = Math.ceil((this.sqft) / (tileLength*tileWidth) )
-    //   this.showResult = !this.showResult
       
 
     },
