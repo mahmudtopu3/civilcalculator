@@ -13,7 +13,7 @@
 
 
           <button @click="showRcc=true ;showTile=false;showBrick=false" class="btn"
-          :class="{'btn-warning' : showRcc}">Brickwall</button> 
+          :class="{'btn-warning' : showRcc}">Rcc</button> 
          
       </div>
   
